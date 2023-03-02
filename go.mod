@@ -1,3 +1,3 @@
-module github.com/declanthompson/web-education-block
+module github.com/declanthompson/wowchemy-block-education
 
 go 1.19
