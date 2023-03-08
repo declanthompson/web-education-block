@@ -1,42 +1,81 @@
+{{/* Education */}}
+{{/* Based on Wowchemy Blocks: Experience */}}
+{{/* Documentation: https://wowchemy.com/blocks/ */}}
+{{/* License: https://github.com/wowchemy/wowchemy-hugo-themes/blob/main/LICENSE.md */}}
+
+{{/* Initialise */}}
 {{ $page := .wcPage }}
 {{ $block := .wcBlock }}
+{{ $columns := $block.design.columns | default "1" }}
 
+<!-- Experience widget -->
+<div class="col-12 {{if eq $columns "2"}}col-lg-8{{end}}">
+  {{ with $block.content.text }}{{ . | emojify | $page.RenderString }}{{ end }}
 
-<h2 class="display-3 text-center">{{ $block.Title }}</h2>
-<hr />
-<div class="container-fluid py-5" id="app">
-  <div class="row">
-    {{- range $block.Params.countdowns }}
-      <div class="countdown col-md-6 border">
-        <h2 class="text-center display-4">{{ .name }}</h2>
-        <div data-countdown="{{- .date -}}"></div>
+  {{ if $block.content.items }}
+  {{ $exp_len := len $block.content.items }}
+
+  {{/* Default to user's custom order (as requested in #1761) as Hugo doesn't support multiple sorts on params. */}}
+  {{ range $idx, $key := $block.content.items }}
+  <div class="row experience">
+    <!-- Timeline -->
+    <div class="col-auto text-center flex-column d-none d-sm-flex">
+      <div class="row h-50">
+        <div class="col {{if gt $idx 0}}border-right{{end}}">&nbsp;</div>
+        <div class="col">&nbsp;</div>
       </div>
-    {{- end }}
+      <div class="m-2">
+        <span class="badge badge-pill border {{if not .date_end}}exp-fill{{end}}">&nbsp;</span>
+      </div>
+      <div class="row h-50">
+        <div class="col {{if lt $idx (sub $exp_len 1)}}border-right{{end}}">&nbsp;</div>
+        <div class="col">&nbsp;</div>
+      </div>
+    </div>
+    <!-- Content -->
+    <div class="col py-2">
+      <div class="card">
+        <div class="card-body">
+
+          {{- if .company_logo}}
+          {{- $svg_icon := resources.Get (printf "media/icons/brands/%s.svg" .company_logo) -}}
+          {{ if not $svg_icon }}{{ errorf "Brand logo not found at `assets/media/icons/brands/%s.svg`" .company_logo }}{{end}}
+          <div class="d-flex align-content-start">
+            <div class="mr-2 mb-2">
+              {{- with .company_url}}<a href="{{.}}" target="_blank" rel="noopener">{{end -}}
+              <img src="{{ $svg_icon.RelPermalink }}" width="56px" height="56px" alt="{{.company | plainify}}" loading="lazy">
+              {{- with .company_url}}</a>{{end -}}
+            </div>
+            <div>
+          {{ end }}
+
+              <div class="section-subheading card-title exp-title text-muted my-0">{{.title | markdownify | emojify}}</div>
+              <div class="section-subheading card-title exp-company text-muted my-0">
+                {{- with .company_url}}<a href="{{.}}" target="_blank" rel="noopener">{{end}}{{.company | markdownify | emojify}}{{with .company_url}}</a>{{end -}}
+              </div>
+              <div class="text-muted exp-meta">
+                {{ (time .date_start) | time.Format ($block.Params.date_format | default "January 2006") }} –
+                {{ if .date_end}}
+                  {{ (time .date_end) | time.Format ($block.Params.date_format | default "January 2006") }}
+                {{else}}
+                  {{ i18n "present" | default "Present" }}
+                {{end}}
+                {{with .location}}
+                  <span class="middot-divider"></span>
+                  <span>{{.}}</span>
+                {{end}}
+              </div>
+
+          {{- if .company_logo}}
+            </div>
+          </div>
+          {{end}}
+
+          {{with .description}}<div class="card-text">{{. | markdownify | emojify}}</div>{{end}}
+        </div>
+      </div>
+    </div>
   </div>
+  {{end}}
+  {{end}}
 </div>
-
-{{ $block.Content }}
-
-
-<!-- Library -->
-<script
-  src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
-  integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
-  crossorigin="anonymous"
-  referrerpolicy="no-referrer"></script>
-<script
-  src="https://cdnjs.cloudflare.com/ajax/libs/jquery.countdown/2.2.0/jquery.countdown.min.js"
-  integrity="sha512-lteuRD+aUENrZPTXWFRPTBcDDxIGWe5uu0apPEn+3ZKYDwDaEErIK9rvR0QzUGmUQ55KFE2RqGTVoZsKctGMVw=="
-  crossorigin="anonymous"
-  referrerpolicy="no-referrer"></script>
-<script>
-  $("[data-countdown]").each(function () {
-    var $this = $(this),
-      finalDate = $(this).data("countdown");
-    $this.countdown(finalDate, function (event) {
-      $this.html(
-        event.strftime(`<div class="text-center">%D Days %H:%M:%S</div>`)
-      );
-    });
-  });
-</script>
