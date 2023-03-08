@@ -115,6 +115,8 @@
 {{ $columns := $block.Params.design.columns | default "2" }}
 {{ $use_cols := in (slice "collection" "experience" "accomplishments" "contact" "markdown" "tag_cloud" "portfolio") $block_type }}
 
+{{errorf $usecolumns}}
+
 {{/* Dedicated child div for bg prevents parallax 100% height issue within new CSS grid page wrapper. */}}
 <section id="{{$hash_id}}" class="home-section {{$widget_class}} {{if $bg.text_color_light}}dark{{else if (eq $bg.text_color_light false)}}light{{end}} {{with $css_classes}}{{.}}{{end}}" {{with $style}}style="{{. | safeCSS}}"{{end}} {{print $extra_attributes | safeHTMLAttr}}>
  <div class="home-section-bg {{if $bg.image}} bg-image{{if ($bg.image_parallax | default true) }} parallax{{end}}{{end}}" {{with $style_bg}}style="{{. | safeCSS}}"{{end}}>
@@ -129,6 +131,7 @@
         <div class="section-heading col-12 mb-3 text-center">
           {{ with $block.Title }}<h1 class="mb-0">{{ . | markdownify | emojify }}</h1>{{ end }}
           {{ with $block.Params.subtitle }}<p class="mt-1">{{ . | markdownify | emojify }}</p>{{ end }}
+          Booo!
         </div>
       {{else}}
         <div class="section-heading col-12 col-lg-4 mb-3 mb-lg-0 d-flex flex-column align-items-center align-items-lg-start">
