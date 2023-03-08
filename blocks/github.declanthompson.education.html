@@ -108,20 +108,21 @@
             </div>
           </div>
           {{end}}
-
-          {{with .description}}
-            <div class="card-text">
-              {{. | markdownify | emojify}}
-              {{with .coursework}}<span class="expand">
-									<span class="text-muted exp-meta" style="cursor: pointer;" onclick="$h = $(this);$h.next('div').slideToggle(100,function () {$h.children('i').attr('class',function () {return $h.next('div').is(':visible') ? '{{`fas fa-chevron-down`}}' : 'fas fa-{{`fas fa-chevron-right`}}';});});">
-										Coursework taken
-										<i class="{{ `fas fa-chevron-right`}}"></i>
-									</span>
-									<div class="card-text" style="display: none; margin: 10px 0px 10px">  {{. | markdownify | emojify}} </div>
-								</span>{{end}}
-            </div>
-          {{end}}
-          {{not with .description}}
+          
+          {{if .description}}
+            {{with .description}}
+              <div class="card-text">
+                {{. | markdownify | emojify}}
+                {{with .coursework}}<span class="expand">
+                    <span class="text-muted exp-meta" style="cursor: pointer;" onclick="$h = $(this);$h.next('div').slideToggle(100,function () {$h.children('i').attr('class',function () {return $h.next('div').is(':visible') ? '{{`fas fa-chevron-down`}}' : 'fas fa-{{`fas fa-chevron-right`}}';});});">
+                      Coursework taken
+                      <i class="{{ `fas fa-chevron-right`}}"></i>
+                    </span>
+                    <div class="card-text" style="display: none; margin: 10px 0px 10px">  {{. | markdownify | emojify}} </div>
+                  </span>{{end}}
+              </div>
+            {{end}}
+          {{else}}
             {{with .coursework}}<span class="expand">
 									<span class="text-muted exp-meta" style="cursor: pointer;" onclick="$h = $(this);$h.next('div').slideToggle(100,function () {$h.children('i').attr('class',function () {return $h.next('div').is(':visible') ? '{{`fas fa-chevron-down`}}' : 'fas fa-{{`fas fa-chevron-right`}}';});});">
 										Coursework taken
