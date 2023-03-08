@@ -5,8 +5,8 @@
 {{/* Documentation: https://wowchemy.com/blocks/ */}}
 {{/* License: https://github.com/wowchemy/wowchemy-hugo-themes/blob/main/LICENSE.md */}}
 
-{{ $page := .page }}
-{{ $block := .block }}
+{{ $page := .wcPage }}
+{{ $block := .wcBlock }}
 
 {{ $block_type := lower $block.block | default "markdown" }}
 {{ $block_path := printf "blocks/%s.html" $block_type }}
