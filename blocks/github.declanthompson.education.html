@@ -25,7 +25,7 @@
 {{ $style_bg := "" }}
 
 {{ if $bg.color }}
-  {{ $style_bg = printf "background-color: %s;" ($bg.color | default "transparent") }}
+  {{ $style_bg = "transparent }}
 {{ end }}
 
 {{ if and $bg.gradient_start $bg.gradient_end }}
