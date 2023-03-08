@@ -10,6 +10,15 @@
 {{ $block := .wcBlock }}
 {{ $columns := $block.Params.design.columns | default "2" }}
 
+{{ $block_type := lower $block.Params.widget | default "markdown" }}
+{{ if eq $block_type "blank" }}{{ $block_type = "markdown" }}{{ end }}{{/* Support legacy Blank block */}}
+{{ if eq $block_type "featurette" }}{{ $block_type = "features" }}{{ end }}{{/* Support legacy Featurette block */}}
+{{ if eq $block_type "pages" }}{{ $block_type = "collection" }}{{ end }}{{/* Support legacy Pages block */}}
+{{ if eq $block_type "featured" }}{{ $block_type = "collection" }}{{ end }}{{/* Support legacy Featured block */}}
+{{ $widget_path := printf "blocks/v1/%s.html" $block_type }}
+{{ if not (templates.Exists (printf "partials/%s" $widget_path)) }}
+  {{ errorf "%s uses a `%s` block but the `%s` block was not found at `layouts/partials/%s`" $block.File.Path $block_type $block_type $widget_path }}
+{{ end }}
 
 {{/* Workaround to make Hugo's .Page.Store.Set cascade up to the parent of headless pages */}}
 {{ if $block.Page.Store.Get "has_mermaid" }}
@@ -86,16 +95,36 @@
 {{ $widget_args := dict "wcPage" $page "wcBlock" $block "wcIdentifier" $hash_id }}
 {{ $css_classes := $block.Params.design.css_class | default $block.Params.advanced.css_class | default "" }}
 {{ $extra_attributes := "" }}
+{{ $use_container := true }}
+
+{{/* Special case: Slider widget. */}}
+{{ if in (slice "slider") $block_type }}
+  {{ $css_classes = print $css_classes " carousel slide" }}
+  {{ $extra_attributes = printf "data-ride=\"carousel\" data-interval=\"%s\"" (cond ($block.Params.design.loop | default true) (string $block.Params.design.interval | default "3000") "false") }}
+  {{ $use_container = false }}
+{{ end }}
+
+{{ $widget_class := printf "wg-%s" (replace (replace $block_type "." "-") "_" "-") }}
+
+{{ $widget_config_file := printf "blocks/v1/%s-config.html" $block_type }}
+{{ if templates.Exists (printf "partials/%s" $widget_config_file) }}
+  {{ $cfg := partial $widget_config_file $widget_args }}
+  {{ $use_container = $cfg.use_container }}
+{{end}}
 
 {{ $columns := $block.Params.design.columns | default "2" }}
+{{ $use_cols := true }}
 
+{{errorf "%v %v" $block_type $use_cols}}
 
 {{/* Dedicated child div for bg prevents parallax 100% height issue within new CSS grid page wrapper. */}}
-<section id="{{$hash_id}}" class="home-section {{if $bg.text_color_light}}dark{{else if (eq $bg.text_color_light false)}}light{{end}} {{with $css_classes}}{{.}}{{end}}" {{with $style}}style="{{. | safeCSS}}"{{end}} {{print $extra_attributes | safeHTMLAttr}}>
+<section id="{{$hash_id}}" class="home-section {{$widget_class}} {{if $bg.text_color_light}}dark{{else if (eq $bg.text_color_light false)}}light{{end}} {{with $css_classes}}{{.}}{{end}}" {{with $style}}style="{{. | safeCSS}}"{{end}} {{print $extra_attributes | safeHTMLAttr}}>
  <div class="home-section-bg {{if $bg.image}} bg-image{{if ($bg.image_parallax | default true) }} parallax{{end}}{{end}}" {{with $style_bg}}style="{{. | safeCSS}}"{{end}}>
    {{with $bg_video}}<video class="bg-video {{$bg_video_class}}" playsinline="" preload="auto" loop="" muted autoplay="" tabindex="-1" width="100%" height="100%" src="{{.RelPermalink}}" style="width: 100%; height: 100%; object-fit: cover; object-position: center center; opacity: 1;"></video>{{end}}
  </div>
+  {{if $use_container}}<div class="container">{{end}}
 
+  {{if $use_cols}}
     <div class="row  {{if not $block.Title | or (eq $columns "1") }}justify-content-center{{end}}">
     {{ if $block.Title }}
       {{ if eq $columns "1" }}
@@ -111,6 +140,7 @@
         </div>
       {{end}}
     {{end}}
+  {{end}}
 
     <!-- Experience widget -->
 <div class="col-12 {{if eq $columns "2"}}col-lg-8{{end}}">
@@ -183,8 +213,10 @@
   {{end}}
   {{end}}
 </div>
+
+  {{if $use_cols}}
     </div>
+  {{end}}
 
+  {{if $use_container}}</div>{{end}}
 </section>
-
-
