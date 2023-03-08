@@ -6,6 +6,7 @@
 {{ $page := .wcPage }}
 {{ $block := .wcBlock }}
 {{ $columns := $block.Params.design.columns | default "2" }}
+{{ errorf $block.Title }}
 
 <!-- Experience widget -->
 <div class="col-12 {{if eq $columns "2"}}col-lg-8{{end}}">
