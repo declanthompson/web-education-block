@@ -5,8 +5,11 @@
 {{/* Documentation: https://wowchemy.com/blocks/ */}}
 {{/* License: https://github.com/wowchemy/wowchemy-hugo-themes/blob/main/LICENSE.md */}}
 
-{{ $page := .wcPage }}
-{{ $block := .wcBlock }}
+{{ $page := .page }}
+{{ $block := .block }}
+
+{{ $wcPage := .wcPage }}
+{{ $wcBlock := .wcBlock }}
 
 {{ $block_type := lower $block.block | default "markdown" }}
 {{ $block_path := printf "blocks/%s.html" $block_type }}
@@ -105,7 +108,7 @@
   {{if $use_cols}}
     <div class="row  {{if not $block.content.title | or (eq $columns "1") }}justify-content-center{{end}}">
       HI
-      {{ errorf "%v %v" $block.Title $block }}
+      {{ errorf "%v %v" $wcBlock.Title $wcBlock }}
     {{ if $block.Title }}
       {{ if eq $columns "1" }}
         <div class="section-heading col-12 mb-3 text-center">
