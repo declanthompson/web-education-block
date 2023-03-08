@@ -158,7 +158,7 @@
           {{ end }}
 
               <h4 class="card-title exp-title text-muted mt-0 mb-1">{{.title | markdownify | emojify}} <small>{{.grade | markdownify | emojify}}</small></h4>
-              <div class="section-subheading card-title exp-company text-muted my-0">
+              <h4 class="card-title exp-company text-muted my-0">
                 {{ if .advisor}}
                   {{with .advisor}}
                           <span>{{. | markdownify | emojify}}</span>				
@@ -178,6 +178,8 @@
                   <span class="middot-divider"></span>
                   <span>{{.}}</span>
                 {{end}}
+                {{ if .major}}
+				          {{with .major}}<div class="text-muted exp-meta">{{. | markdownify | emojify}}</div>{{end}}
               </div>
 
           {{- if .company_logo}}
@@ -186,6 +188,13 @@
           {{end}}
 
           {{with .description}}<div class="card-text">{{. | markdownify | emojify}}</div>{{end}}
+          {{with .coursework}}<span class="expand">
+									<span class="text-muted exp-meta" style="cursor: pointer;" onclick="$h = $(this);$h.next('div').slideToggle(100,function () {$h.children('i').attr('class',function () {return $h.next('div').is(':visible') ? '{{`fas fa-chevron-down`}}' : 'fas fa-{{`fas fa-chevron-right`}}';});});">
+										Coursework taken
+										<i class="{{ `fas fa-chevron-right`}}"></i>
+									</span>
+									<div class="card-text" style="display: none; margin: 10px 0px 10px">  {{. | markdownify | emojify}} </div>
+								</span>{{end}}
         </div>
       </div>
     </div>
