@@ -99,11 +99,7 @@
 
 {{ $widget_config_file := printf "blocks/%s-config.html" $block_type }}
 
-{{/* Dedicated child div for bg prevents parallax 100% height issue within new CSS grid page wrapper. */}}
-<section id="{{$hash_id}}" class="home-section experience light {{with $css_classes}}{{.}}{{end}}" {{with $style}}style="{{. | safeCSS}}"{{end}} {{print $extra_attributes | safeHTMLAttr}}>
- <div class="home-section-bg " {{with $style_bg}}style="{{. | safeCSS}}"{{end}}>
- </div>
-  {{if $use_container}}<div class="container">{{end}}
+
 
   {{if $use_cols}}
     <div class="row  {{if not $block.content.title | or (eq $columns "1") }}justify-content-center{{end}}">
@@ -193,9 +189,4 @@
 </div>
 
 
-  {{if $use_cols}}
-    </div>
-  {{end}}
-
-  {{if $use_container}}</div>{{end}}
-</section>
+  
