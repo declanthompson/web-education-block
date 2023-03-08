@@ -108,7 +108,6 @@
   {{if $use_cols}}
     <div class="row  {{if not $block.content.title | or (eq $columns "1") }}justify-content-center{{end}}">
       HI
-      {{ errorf "%v %v" $wcBlock.Title $wcBlock }}
     {{ if $block.Title }}
       {{ if eq $columns "1" }}
         <div class="section-heading col-12 mb-3 text-center">
