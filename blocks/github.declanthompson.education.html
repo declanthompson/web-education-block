@@ -121,7 +121,7 @@
 								</span>{{end}}
             </div>
           {{end}}
-          {{without .description}}
+          {{not with .description}}
             {{with .coursework}}<span class="expand">
 									<span class="text-muted exp-meta" style="cursor: pointer;" onclick="$h = $(this);$h.next('div').slideToggle(100,function () {$h.children('i').attr('class',function () {return $h.next('div').is(':visible') ? '{{`fas fa-chevron-down`}}' : 'fas fa-{{`fas fa-chevron-right`}}';});});">
 										Coursework taken
